@@ -48,7 +48,10 @@ def handle_private_upload(app):
                 ts = time.strftime("%Y%m%d_%H%M%S")
                 filename = f"{ts}_{sanitize_filename(file.file_name)}"
             else:
-                filename = sanitize_filename(None)
+                if message.photo:
+                    filename = sanitize_filename(None, fallback_ext=".jpg")
+                else:
+                    filename = sanitize_filename(None)
 
             local_path = os.path.join(temp_dir, filename)
 
