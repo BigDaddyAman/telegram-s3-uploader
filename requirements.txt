@@ -1,0 +1,4 @@
+pyrofork==2.3.69
+TgCrypto-pyrofork==1.2.8
+boto3==1.42.47 
+python-dotenv==1.2.1
