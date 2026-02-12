@@ -1,20 +1,15 @@
-# Secrets
 .env
 
-# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Virtualenv
 .venv/
 venv/
 
-# Runtime
 downloads/*
 logs/
 
-# OS
 .DS_Store
 Thumbs.db

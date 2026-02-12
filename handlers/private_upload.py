@@ -85,6 +85,5 @@ def handle_private_upload(app):
                 )
 
         finally:
-            # 🧹 Always clean temp files
             if os.path.exists(temp_dir):
                 shutil.rmtree(temp_dir, ignore_errors=True)
