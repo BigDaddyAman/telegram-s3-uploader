@@ -1,4 +1,4 @@
-# Telegram → S3 Uploader Bot
+# Telegram → S3 Uploader
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Telegram-blue)
@@ -132,6 +132,62 @@ docker run --env-file .env telegram-s3-uploader
 | S3_BUCKET | Bucket name |
 | PRESIGNED_EXPIRE_SECONDS | Presigned link expiration time (seconds) |
 | ENABLE_PRESIGNED_URL | Enable or disable presigned download links (`true` / `false`) |
+| S3_MAX_CONCURRENCY | Parallel multipart uploads per file (default: 4–6) |
+| S3_MULTIPART_THRESHOLD_MB | File size threshold to enable multipart uploads (default: 100) |
+| S3_MULTIPART_CHUNK_MB | Multipart chunk size in MB (default: 50) |
+| MAX_PARALLEL_UPLOADS | Maximum number of files uploading at the same time (default: 3) |
+
+---
+
+## 🚦 Upload Limits & Queueing
+
+To keep the bot stable and prevent overload, uploads are limited using two mechanisms:
+
+### Global upload limit
+Only a fixed number of files can upload at the same time.
+Additional uploads are automatically queued.
+
+Controlled by: MAX_PARALLEL_UPLOADS=3
+
+### Per-user limit
+Each user can upload **only one file at a time**.
+This prevents a single user from occupying all upload slots.
+
+These limits ensure:
+- Stable CPU and memory usage
+- Fair access for all users
+- Safe operation on Railway and small VPS instances
+
+---
+
+
+## ⚡ Performance Tuning
+
+For large files (2–4 GB), upload performance can be tuned using environment variables.
+The default values are safe and work well for most deployments, but advanced users can
+adjust them to balance speed, CPU usage, and memory consumption.
+
+### Multipart upload settings
+
+These settings control how a **single file** is uploaded to S3-compatible storage.
+
+```env
+S3_MAX_CONCURRENCY=4
+S3_MULTIPART_THRESHOLD_MB=100
+S3_MULTIPART_CHUNK_MB=50
+```
+
+- **`S3_MAX_CONCURRENCY`**  
+  Number of multipart chunks uploaded in parallel for a single file.  
+  Higher values increase upload speed but also increase CPU usage.
+
+- **`S3_MULTIPART_THRESHOLD_MB`**  
+  File size (in MB) at which multipart uploads are enabled.  
+  Files smaller than this value are uploaded using a single request.
+
+- **`S3_MULTIPART_CHUNK_MB`**  
+  Size of each multipart chunk (in MB).  
+  Larger chunks reduce overhead but increase memory usage.
 
 ---
 
